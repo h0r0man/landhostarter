@@ -9,7 +9,7 @@
     <?php elseif (is_tag()): ?>
       <h2><?php single_tag_title(); ?></h2>
     <?php elseif (is_search()): ?>
-      <h2><?php printf( __( 'Search Results for: %s', 'twentyfifteen' ), get_search_query() ); ?></h2>
+      <h2><?php printf( __( 'Search Results for: %s', 'landhostarter' ), get_search_query() ); ?></h2>
     <?php else: ?>
       <h2><?php esc_html_e('News', 'landhostarter'); ?></h2>
     <?php endif; ?>
