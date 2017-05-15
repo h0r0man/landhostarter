@@ -4,7 +4,7 @@
 
 var url                   = 'http://landhostarter.dev/',
     source                = './src',
-    destination           = '.dist',
+    destination           = './dist',
     browserSyncPort       = 8012,
     AUTOPREFIXER_BROWSERS = {
       browsers: [
