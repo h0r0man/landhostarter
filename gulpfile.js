@@ -1,46 +1,52 @@
 'use strict';
 
-var gulp          = require('gulp'),
-    cache         = require('gulp-cache'),
-    runSequence   = require('run-sequence'),
-    flatten       = require('gulp-flatten');
+// Project ---------------------------------------------------------------------
 
-var sass          = require('gulp-sass'),
-    combineMq     = require('gulp-combine-mq'),
-    autoprefixer  = require('gulp-autoprefixer'),
-    cssnano       = require('gulp-cssnano'),
-    csscomb       = require('gulp-csscomb'),
-    bourbon       = require('node-bourbon').includePaths,
-    neat          = require('node-neat').includePaths;
+var url                   = 'http://landhostarter.dev/',
+    source                = './src',
+    destination           = '.dist',
+    browserSyncPort       = 8012,
+    AUTOPREFIXER_BROWSERS = {
+      browsers: [
+        'last 3 versions',
+        'ie 11',
+        'ie 10',
+        'ios >= 7',
+        'android >= 4'
+      ]
+    };
 
-var include       = require('gulp-include'),
-    uglify        = require('gulp-uglify');
+// Gulp ------------------------------------------------------------------------
 
-var browserSync   = require('browser-sync').create(),
-    reload        = browserSync.reload;
-
-// Url -------------------------------------------------------------------------
-
-var url           = 'http://landhostarter.dev/';
-
-// Paths -----------------------------------------------------------------------
-
-var source        = './src',
-    destination   = './dist';
+var gulp         = require('gulp'),
+    cache        = require('gulp-cache'),
+    runSequence  = require('run-sequence'),
+    flatten      = require('gulp-flatten'),
+    rename       = require('gulp-rename');
 
 // Stylesheets -----------------------------------------------------------------
 
-var AUTOPREFIXER_BROWSERS = {
-  browsers: [
-    'last 3 versions',
-    'ie 11',
-    'ie 10',
-    'ios >= 7',
-    'android >= 4'
-  ]
-};
+var sass         = require('gulp-sass'),
+    combineMq    = require('gulp-combine-mq'),
+    autoprefixer = require('gulp-autoprefixer'),
+    cssnano      = require('gulp-cssnano'),
+    csscomb      = require('gulp-csscomb'),
+    bourbon      = require('node-bourbon').includePaths,
+    neat         = require('node-neat').includePaths;
 
-gulp.task('css', function() {
+// JavaScripts -----------------------------------------------------------------
+
+var include      = require('gulp-include'),
+    uglify       = require('gulp-uglify');
+
+// BrowserSync -----------------------------------------------------------------
+
+var browserSync  = require('browser-sync').create(),
+    reload       = browserSync.reload;
+
+// Stylesheets -----------------------------------------------------------------
+
+gulp.task('stylesheets', function() {
   gulp.src(source + '/stylesheets/**/*.{scss,sass}')
     .pipe(sass({
       includePaths: bourbon,
@@ -57,7 +63,7 @@ gulp.task('css', function() {
 
 // Scripts ---------------------------------------------------------------------
 
-gulp.task('js', function() {
+gulp.task('scripts', function() {
   return gulp.src([source + '/scripts/{plugins,scripts}.js'])
     .pipe(include())
     .pipe(uglify())
@@ -88,8 +94,8 @@ gulp.task('watch', function() {
   browserSync.init({
     files: ['{template-pages,templates-parts,inc}/**/*.php', '*.php'],
     proxy: url,
+    port: browserSyncPort,
     notify: false,
-    port: 8001,
     ghostMode: {
       clicks: false,
       scroll: false,
@@ -105,8 +111,8 @@ gulp.task('watch', function() {
     }
   });
 
-  gulp.watch(source + '/stylesheets/**/*.{scss,sass}', ['css']);
-  gulp.watch(source + '/scripts/**/*.js', ['js']);
+  gulp.watch(source + '/stylesheets/**/*.{scss,sass}', ['stylesheets']);
+  gulp.watch(source + '/scripts/**/*.js', ['scripts']);
   gulp.watch(source + '/webfonts/**/*', ['fonts']);
   gulp.watch(source + '/images/**/*', ['images']);
   gulp.watch(['build']);
@@ -121,7 +127,7 @@ gulp.task('clear', function (done) {
 // Build -----------------------------------------------------------------------
 
 gulp.task('build', function(callback) {
-  runSequence('clear', 'css', 'js', 'images', 'fonts', callback);
+  runSequence('clear', 'stylesheets', 'scripts', 'images', 'fonts', callback);
 });
 
 // Gulp ------------------------------------------------------------------------
