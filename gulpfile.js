@@ -64,7 +64,7 @@ gulp.task('stylesheets', function() {
 // Scripts ---------------------------------------------------------------------
 
 gulp.task('scripts', function() {
-  return gulp.src([source + '/scripts/{plugins,scripts}.js'])
+  return gulp.src([source + '/scripts/{vendor,main}.js'])
     .pipe(include())
     .pipe(uglify())
     .pipe(gulp.dest(destination + '/js'))
